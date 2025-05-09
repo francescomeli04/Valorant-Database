@@ -1,0 +1,367 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Home - Valorant Team Database{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Quick Stats Section -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card hover-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-3 text-primary pulse"></i>
+                    <h3 class="stat-number">{{ total_players }}</h3>
+                    <p class="stat-label">Total Players</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card hover-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-2x mb-3 text-primary pulse"></i>
+                    <h3 class="stat-number">{{ total_teams }}</h3>
+                    <p class="stat-label">Total Teams</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card hover-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-2x mb-3 text-primary pulse"></i>
+                    <h3 class="stat-number">{{ radiant_players }}</h3>
+                    <p class="stat-label">Radiant Players</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card hover-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-gamepad fa-2x mb-3 text-primary pulse"></i>
+                    <h3 class="stat-number">{{ total_agents }}</h3>
+                    <p class="stat-label">Total Agents</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="filter-section fade-in">
+        <form method="get" class="row">
+            <!-- Search Input -->
+            <div class="col-md-4 mb-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-dark text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" 
+                           name="search" 
+                           class="form-control glow" 
+                           placeholder="Cerca team o giocatore..."
+                           value="{{ search_query }}">
+                </div>
+            </div>
+
+            <!-- Rank Filter -->
+            <div class="col-md-3 mb-3">
+                <select name="rank" class="form-control glow">
+                    <option value="">Tutti i Rank</option>
+                    {% for rank_value, rank_label in available_ranks %}
+                        <option value="{{ rank_value }}" {% if rank_value == rank_filter %}selected{% endif %}>
+                            {{ rank_label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Team Filter -->
+            <div class="col-md-3 mb-3">
+                <select name="team" class="form-control glow">
+                    <option value="">Tutti i Team</option>
+                    {% for team in teams %}
+                        <option value="{{ team.id }}" {% if team.id|stringformat:"s" == team_filter %}selected{% endif %}>
+                            {{ team.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filter Button -->
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-filter ripple">
+                        <i class="fas fa-filter"></i> Filtra
+                    </button>
+                    <button type="button" class="btn btn-reset ripple shake-trigger">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Teams Section -->
+    <div class="row">
+        {% for team in teams %}
+        <div class="col-md-4 mb-4">
+            <div class="card hover-card fade-in">
+                <div class="card-body text-center">
+                    {% if team.logo %}
+                        <img src="{{ team.logo.url }}" alt="{{ team.nome }} Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                    {% else %}
+                        <div class="placeholder-image rounded mb-3" style="width: 150px; height: 150px; background-color: #444; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <span class="text-muted">No Logo</span>
+                        </div>
+                    {% endif %}
+                    <h5 class="card-title">{{ team.nome }}</h5>
+                    <a href="{% url 'polls:team_detail' team.id %}" class="btn btn-filter ripple">
+                        <i class="fas fa-users"></i> View Team
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Players Section -->
+    <div class="row mt-4">
+        <!-- Flex Players -->
+        {% if players.flex %}
+        <div class="col-md-12 mb-4">
+            <div class="card hover-card fade-in">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Flex Players</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.flex %}
+                                <tr class="ripple">
+                                    <td class="custom-tooltip" 
+                                        data-created-at="{{ player.created_at|date:'Y-m-d' }}"
+                                        data-updated-at="{{ player.updated_at|date:'Y-m-d' }}"
+                                        data-image="{% if player.image %}{{ player.image.url }}{% endif %}">
+                                        {{ player.nome }}
+                                        <span class="tooltip-text">Click to view details</span>
+                                    </td>
+                                    <td>{{ player.team.nome|default:"LFT" }}</td>
+                                    <td><span class="badge glow">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Duelist Players -->
+        {% if players.duelist %}
+        <div class="col-md-12 mb-4">
+            <div class="card hover-card fade-in">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Duelists</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.duelist %}
+                                <tr class="ripple">
+                                    <td class="custom-tooltip"
+                                        data-created-at="{{ player.created_at|date:'Y-m-d' }}"
+                                        data-updated-at="{{ player.updated_at|date:'Y-m-d' }}"
+                                        data-image="{% if player.image %}{{ player.image.url }}{% endif %}">
+                                        {{ player.nome }}
+                                        <span class="tooltip-text">Click to view details</span>
+                                    </td>
+                                    <td>{{ player.team.nome|default:"LFT" }}</td>
+                                    <td><span class="badge glow">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Controller Players -->
+        {% if players.controller %}
+        <div class="col-md-12 mb-4">
+            <div class="card hover-card fade-in">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Controllers</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.controller %}
+                                <tr class="ripple">
+                                    <td class="custom-tooltip"
+                                        data-created-at="{{ player.created_at|date:'Y-m-d' }}"
+                                        data-updated-at="{{ player.updated_at|date:'Y-m-d' }}"
+                                        data-image="{% if player.image %}{{ player.image.url }}{% endif %}">
+                                        {{ player.nome }}
+                                        <span class="tooltip-text">Click to view details</span>
+                                    </td>
+                                    <td>{{ player.team.nome|default:"LFT" }}</td>
+                                    <td><span class="badge glow">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Sentinel Players -->
+        {% if players.sentinel %}
+        <div class="col-md-12 mb-4">
+            <div class="card hover-card fade-in">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">Sentinels</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.sentinel %}
+                                <tr class="ripple">
+                                    <td class="custom-tooltip"
+                                        data-created-at="{{ player.created_at|date:'Y-m-d' }}"
+                                        data-updated-at="{{ player.updated_at|date:'Y-m-d' }}"
+                                        data-image="{% if player.image %}{{ player.image.url }}{% endif %}">
+                                        {{ player.nome }}
+                                        <span class="tooltip-text">Click to view details</span>
+                                    </td>
+                                    <td>{{ player.team.nome|default:"LFT" }}</td>
+                                    <td><span class="badge glow">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Initiator Players -->
+        {% if players.initiator %}
+        <div class="col-md-12 mb-4">
+            <div class="card hover-card fade-in">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">Initiators</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.initiator %}
+                                <tr class="ripple">
+                                    <td class="custom-tooltip"
+                                        data-created-at="{{ player.created_at|date:'Y-m-d' }}"
+                                        data-updated-at="{{ player.updated_at|date:'Y-m-d' }}"
+                                        data-image="{% if player.image %}{{ player.image.url }}{% endif %}">
+                                        {{ player.nome }}
+                                        <span class="tooltip-text">Click to view details</span>
+                                    </td>
+                                    <td>{{ player.team.nome|default:"LFT" }}</td>
+                                    <td><span class="badge glow">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* Quick Stats Styling */
+    .stat-card {
+        background: linear-gradient(145deg, var(--card-bg), var(--bg-darker));
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px var(--shadow-color);
+        border-color: var(--primary-color);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    .stat-card i {
+        color: var(--primary-color);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover i {
+        transform: scale(1.2);
+    }
+</style>
+
+{% include "polls/player_modal.html" %}
+{% endblock %}

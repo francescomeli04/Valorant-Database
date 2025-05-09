@@ -1,0 +1,308 @@
+{% extends "polls/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            {% if team.logo %}
+                <img src="{{ team.logo.url }}" alt="{{ team.nome }} Logo" class="img-fluid rounded" style="max-width: 200px;">
+            {% else %}
+                <div class="placeholder-image rounded" style="width: 200px; height: 200px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                    <span class="text-muted">No Logo</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1 class="display-4">{{ team.nome }}</h1>
+            <p class="text-muted">Created: {{ team.created_at|date:"F j, Y" }}</p>
+            <p class="text-muted">Last Updated: {{ team.updated_at|date:"F j, Y" }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Team Roster</h2>
+            
+            {% if players.flex %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Flex Players</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.flex %}
+                                <tr>
+                                    <td>
+                                        <div class="player-info">
+                                            {% if player.image %}
+                                                <img src="{{ player.image.url }}" alt="{{ player.nome }}" class="player-image">
+                                            {% else %}
+                                                <div class="player-image-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            {% endif %}
+                                            <span class="player-name">{{ player.nome }}</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if players.duelist %}
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Duelists</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.duelist %}
+                                <tr>
+                                    <td>
+                                        <div class="player-info">
+                                            {% if player.image %}
+                                                <img src="{{ player.image.url }}" alt="{{ player.nome }}" class="player-image">
+                                            {% else %}
+                                                <div class="player-image-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            {% endif %}
+                                            <span class="player-name">{{ player.nome }}</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if players.controller %}
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Controllers</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.controller %}
+                                <tr>
+                                    <td>
+                                        <div class="player-info">
+                                            {% if player.image %}
+                                                <img src="{{ player.image.url }}" alt="{{ player.nome }}" class="player-image">
+                                            {% else %}
+                                                <div class="player-image-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            {% endif %}
+                                            <span class="player-name">{{ player.nome }}</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if players.sentinel %}
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">Sentinels</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.sentinel %}
+                                <tr>
+                                    <td>
+                                        <div class="player-info">
+                                            {% if player.image %}
+                                                <img src="{{ player.image.url }}" alt="{{ player.nome }}" class="player-image">
+                                            {% else %}
+                                                <div class="player-image-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            {% endif %}
+                                            <span class="player-name">{{ player.nome }}</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if players.initiator %}
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">Initiators</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players.initiator %}
+                                <tr>
+                                    <td>
+                                        <div class="player-info">
+                                            {% if player.image %}
+                                                <img src="{{ player.image.url }}" alt="{{ player.nome }}" class="player-image">
+                                            {% else %}
+                                                <div class="player-image-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            {% endif %}
+                                            <span class="player-name">{{ player.nome }}</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">{{ player.rank }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if not players.flex and not players.duelist and not players.controller and not players.sentinel and not players.initiator %}
+            <div class="alert alert-info">
+                <h4 class="alert-heading">No Players Found</h4>
+                <p>This team currently has no players registered.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="{% url 'polls:index' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Teams
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .player-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .player-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .player-image:hover {
+        transform: scale(1.1);
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 10px var(--glow-color);
+    }
+
+    .player-image-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--bg-darker);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .player-image-placeholder:hover {
+        transform: scale(1.1);
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 10px var(--glow-color);
+    }
+
+    .player-image-placeholder i {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+    }
+
+    .player-name {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: var(--bg-darker);
+        transform: translateX(5px);
+    }
+
+    .table tbody tr:hover .player-image,
+    .table tbody tr:hover .player-image-placeholder {
+        transform: scale(1.1);
+    }
+</style>
+{% endblock %} 

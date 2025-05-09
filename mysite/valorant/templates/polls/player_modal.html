@@ -1,0 +1,253 @@
+<!-- Player Details Modal -->
+<div class="modal fade player-modal" id="playerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Player Details</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="player-profile">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="player-avatar">
+                                <img src="" alt="Player Image" class="player-image" style="display: none;">
+                                <i class="fas fa-user-circle fa-5x text-primary default-avatar"></i>
+                            </div>
+                            <h3 class="player-name mt-3"></h3>
+                            <div class="player-rank badge glow"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="player-info">
+                                <div class="info-group">
+                                    <label><i class="fas fa-users"></i> Team</label>
+                                    <span class="player-team"></span>
+                                </div>
+                                <div class="info-group">
+                                    <label><i class="fas fa-gamepad"></i> Role</label>
+                                    <span class="player-role"></span>
+                                </div>
+                                <div class="info-group">
+                                    <label><i class="fas fa-star"></i> Rank</label>
+                                    <span class="player-rank-text"></span>
+                                </div>
+                                <div class="info-group">
+                                    <label><i class="fas fa-calendar"></i> Joined</label>
+                                    <span class="player-joined"></span>
+                                </div>
+                                <div class="info-group">
+                                    <label><i class="fas fa-clock"></i> Last Updated</label>
+                                    <span class="player-updated"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Player Modal Styling */
+    .player-modal .modal-content {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+    }
+
+    .player-modal .modal-header {
+        border-bottom: 2px solid var(--border-color);
+        padding: 1.5rem;
+    }
+
+    .player-modal .modal-title {
+        color: var(--primary-color);
+        font-size: 1.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .player-profile {
+        padding: 1rem;
+    }
+
+    .player-avatar {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(145deg, var(--card-bg), var(--bg-darker));
+        border-radius: 50%;
+        border: 3px solid var(--primary-color);
+        box-shadow: 0 4px 12px var(--shadow-color);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .player-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px var(--shadow-color);
+    }
+
+    .player-avatar .player-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.3s ease;
+    }
+
+    .player-avatar:hover .player-image {
+        transform: scale(1.1);
+    }
+
+    .player-avatar .default-avatar {
+        font-size: 5rem;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .player-avatar:hover .default-avatar {
+        transform: rotate(360deg);
+    }
+
+    .player-name {
+        color: var(--text-primary);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .player-info {
+        background-color: var(--bg-darker);
+        border-radius: 10px;
+        padding: 1.5rem;
+    }
+
+    .info-group {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .info-group:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .info-group label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .info-group label i {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+    }
+
+    .info-group span {
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .player-rank {
+        font-size: 1.2rem;
+        padding: 0.5rem 1.5rem;
+        margin-top: 1rem;
+    }
+</style>
+
+<script>
+    // Player Details Modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('playerModal');
+        const tooltips = document.querySelectorAll('.custom-tooltip');
+
+        tooltips.forEach(element => {
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                try {
+                    // Get player data
+                    const playerName = this.textContent.trim().replace('Click to view details', '').trim();
+                    const playerRow = this.closest('tr');
+                    const playerTeam = playerRow.querySelector('td:nth-child(2)').textContent.trim();
+                    const playerRank = playerRow.querySelector('.badge').textContent.trim();
+                    const playerRole = playerRow.closest('.card').querySelector('.card-header h3').textContent.trim();
+                    const playerImage = this.getAttribute('data-image');
+
+                    // Get dates from data attributes
+                    const createdAt = this.getAttribute('data-created-at');
+                    const updatedAt = this.getAttribute('data-updated-at');
+
+                    // Format dates
+                    const formatDate = (dateString) => {
+                        if (!dateString) return 'N/A';
+                        const date = new Date(dateString);
+                        if (isNaN(date.getTime())) return 'N/A';
+                        return date.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    };
+
+                    // Update modal content
+                    const updateElement = (selector, value) => {
+                        const element = document.querySelector(selector);
+                        if (element) {
+                            element.textContent = value;
+                        }
+                    };
+
+                    // Update player image
+                    const playerImageElement = document.querySelector('.player-image');
+                    const defaultAvatar = document.querySelector('.default-avatar');
+                    
+                    if (playerImage) {
+                        playerImageElement.src = playerImage;
+                        playerImageElement.style.display = 'block';
+                        defaultAvatar.style.display = 'none';
+                    } else {
+                        playerImageElement.style.display = 'none';
+                        defaultAvatar.style.display = 'block';
+                    }
+
+                    // Update other elements
+                    updateElement('.player-name', playerName);
+                    updateElement('.player-team', playerTeam);
+                    updateElement('.player-role', playerRole);
+                    updateElement('.player-rank', playerRank);
+                    updateElement('.player-rank-text', playerRank);
+                    updateElement('.player-joined', formatDate(createdAt));
+                    updateElement('.player-updated', formatDate(updatedAt));
+
+                    // Show modal
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modalInstance = new bootstrap.Modal(modal);
+                        modalInstance.show();
+                    } else {
+                        modal.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error showing player details:', error);
+                    alert('Error loading player details. Please try again.');
+                }
+            });
+        });
+    });
+</script> 
